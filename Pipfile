@@ -1,0 +1,17 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+docker = "*"
+sqlalchemy = "*"
+psycopg2-binary = "*"
+sqlalchemy-utils = "*"
+selenium = "*"
+sqlalchemy-stubs = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.9"

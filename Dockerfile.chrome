@@ -1,0 +1,42 @@
+FROM ubuntu:20.04
+
+RUN apt-get update && \
+    apt-get install -y curl && \
+    apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y apt-utils xvfb x11-utils x11vnc slim ffmpeg wget zip unzip
+   
+RUN apt-get install -y software-properties-common && \
+    add-apt-repository ppa:deadsnakes/ppa && \
+    apt-get install -y python3.9 && \
+    apt-get install -y python3-pip
+
+RUN apt-get install -y pulseaudio socat && \
+    apt-get install -y alsa-utils
+
+RUN pip install --upgrade pip && \
+    pip install selenium && \
+    pip install sqlalchemy && \
+    pip install sqlalchemy_utils && \
+    pip install psycopg2-binary
+
+RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+RUN sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
+RUN apt-get update
+RUN apt --fix-broken install
+RUN apt-get install google-chrome-stable -y
+
+WORKDIR /recording
+RUN wget https://chromedriver.storage.googleapis.com/108.0.5359.71/chromedriver_linux64.zip 
+RUN unzip chromedriver_linux64.zip -d /usr/bin
+
+COPY ./recording /recording
+
+RUN mkdir output
+
+ENV DISPLAY :99
+ENV SESSION_ID 17201 
+
+RUN chmod a+x ./xvfb.sh
+
+CMD  ./xvfb.sh
